@@ -1,0 +1,20 @@
+{
+  "name": "test-ln",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "pm2 start ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lediepts/test-ln.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lediepts/test-ln/issues"
+  }
+}
