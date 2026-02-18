@@ -6,6 +6,11 @@ const folder = path.join(__dirname, "www");
 const port = 8080;
 
 const server = http.createServer((req, res) => {
+  const start = Date.now(); // thời điểm bắt đầu xử lý request
+
+  // Log basic info ngay khi nhận request
+  console.log(`[REQ] ${new Date().toISOString()} ${req.method} ${req.url}`);
+
   // Nếu truy cập root → trả về index.html
   let filePath =
     req.url === "/"
@@ -14,7 +19,6 @@ const server = http.createServer((req, res) => {
 
   const ext = path.extname(filePath);
 
-  // Mặc định content-type
   let contentType = "text/html";
   const mimeTypes = {
     ".js": "text/javascript",
@@ -30,14 +34,22 @@ const server = http.createServer((req, res) => {
     contentType = mimeTypes[ext];
   }
 
+  // Khi response kết thúc thì log status + thời gian xử lý
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    console.log(
+      `[RES] ${new Date().toISOString()} ${req.method} ${req.url} ` +
+        `-> ${res.statusCode} (${duration}ms)`,
+    );
+  });
+
   fs.readFile(filePath, (err, content) => {
     if (err) {
-      // File không tồn tại
       if (err.code === "ENOENT") {
         res.writeHead(404, { "Content-Type": "text/html" });
         res.end("<h1>404 - Not Found</h1>");
       } else {
-        res.writeHead(500);
+        res.writeHead(500, { "Content-Type": "text/plain" });
         res.end("Server Error");
       }
     } else {
